@@ -1,0 +1,58 @@
+To downgrade docker in node
+---------------------------
+sudo systemctl stop docker
+sudo zypper remove docker
+sudo rm -rf /etc/docker
+sudo rm -rf /var/lib/docker
+
+sudo zypper install docker=20.10.12_ce-159.1
+sudo systemctl start docker
+sudo systemctl enable docker
+
+To install Falco on node
+------------------------
+rpm --import https://falco.org/repo/falcosecurity-packages.asc
+curl -s -o /etc/zypp/repos.d/falcosecurity.repo https://falco.org/repo/falcosecurity-rpm.repo
+zypper -n update
+zypper -n install dkms make
+# If the package was not found by the below command, you might need to run `zypper -n dist-upgrade` in order to fix it. Rebooting the system may be required.
+zypper -n install kernel-default-devel-$(uname -r | sed s/\-default//g)
+# If you use the falco-driver-loader to build the BPF probe locally you need also clang toolchain
+zypper -n install clang llvm
+# You can install also the dialog package if you want it
+zypper -n install dialog
+zypper -n install falco
+
+To Bash into Pod
+----------------
+sudo kubectl --kubeconfig kube_config_cluster.yml exec --stdin -it falco-n6hm8 --namespace falco -- /bin/bash
+
+Falco logs
+----------
+kubectl --kubeconfig kube_config_cluster.yml logs <pod_name> --namespace falco --all-containers
+kubectl --kubeconfig kube_config_cluster.yml logs <pod_name> --namespace falco --all-containers | grep adduser
+kubectl --kubeconfig kube_config_cluster.yml logs <pod_name> --namespace falco --all-containers | grep etc/shadow
+
+
+
+Post - Prometheus Installation check commands
+---------------------------------------------
+## Check your Prometheus release name
+helm list --kubeconfig kube_config_cluster.yml --all --all-namespaces
+## You should have 6 Prometheus-related pods up.
+kubectl --kubeconfig kube_config_cluster.yml get pods --namespace monitoring
+## Verify all pods are Running fine.
+kubectl --kubeconfig kube_config_cluster.yml get pods -A
+
+
+
+
+- list: log_directories
+  items: [/var/log, /dev/log]
+
+- list: log_files
+  items: [syslog, auth.log, secure, kern.log, cron, user.log, dpkg.log, last.log, yum.log, access_log, mysql.log, mysqld.log]
+
+
+
+kube-prometheus-stack-1701158590
