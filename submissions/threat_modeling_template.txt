@@ -1,0 +1,29 @@
+Docker-bench Run Results and Analysis
+[FAIL] 2.2 Ensure the logging level is set to 'info' (Scored)
+According to the CIS Docker Benchmark v1.2:
+Set Docker daemon log level to info.
+
+Setting up an appropriate log level, configures the Docker daemon to log events that you would want to review later.
+A base log level of info and above would capture all logs except debug logs. Until and unless required, you should not run Docker daemon at debug log level.
+
+[FAIL] 2.17.b Ensure that the container is restricted from acquiring additional privileges (Scored)
+According to the CIS Docker Benchmark v1.2:
+By default you should restrict containers from acquiring additional privileges via suid or sgid.
+
+A process can set the no_new_priv bit in the kernel and this persists across forks, clones and execve. The no_new_priv bit ensures that the process and its
+child processes do not gain any additional privileges via suid or sgid bits. This reduces the security risks associated with many dangerous operations
+because there is a much reduced ability to subvert privileged binaries.
+
+Setting this at the daemon level ensures that by default all new containers are restricted from acquiring new privileges.
+
+[FAIL] 5.10 Ensure that the memory usage for containers is limited
+According to the CIS Docker Benchmark v1.2:
+By default, all containers on a Docker host share resources equally. By using the resource management capabilities of the Docker host, you can control the amount of memory that a container is able to use.
+
+If correct memory limits are not set on each container, one process can expand its usage and cause other containers to run out of resources.
+
+[FAIL] 5.10 Ensure that CPU priority is set appropriately on containers
+According to the CIS Docker Benchmark v1.2:
+By default, all containers on a Docker host share resources equally. By using the resource management capabilities of the Docker host you can control the host CPU resources that a container may consume.
+
+If you do not correctly assign CPU thresholds, the container process may run out of resources and become unresponsive. If CPU resources on the host are not constrainted, CPU shares do not place any restrictions on individual resources.
