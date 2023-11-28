@@ -1,0 +1,7 @@
+1. How will you test the changes?
+An intermediate/sandbox environment is used to test the changes in the cluster, this is required to avoid corruption of the currently running system.
+Once test is successful the changes are promoted to production. This should be incorporated in SDLC process.
+
+2. How will you ensure the changes don't negatively affect your cluster?
+The change should be tested in a non-production cluster. Once the change is applied, you should monitor metrics using your observability and monitoring techniques like Prometheus and Grafana.
+Logs and traces can also be collected to troubleshoot efficiently
